@@ -30,6 +30,14 @@ app.get('/associatepage', (req, res) =>{
   res.render('associatePage.ejs')
 })
 
+app.get('/clerkpage', (req, res) =>{
+  res.render('clerkpage.ejs')
+})
+
+app.get('/quotepage', (req, res) =>{
+  res.render('quotepage.ejs')
+})
+
 //const customerresults = require('./controller/customer')
 app.get('/customer', (req, res) =>{
   res.render('customerresults.ejs')
