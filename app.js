@@ -1,11 +1,12 @@
 const express = require('express')
-const path = require('path')
 
 const app = express()
 var port = process.env.PORT || 3000;
 
 // set the view engine to ejs
 app.set('view engine', 'ejs');
+
+app.use(express.static('./public'))
 
 app.get('/', (req, res) => {
   res.render('index');
@@ -23,6 +24,19 @@ app.get('/processCC', (req, res) => {
   credit.processSample((result) => {
     res.render('credit.ejs', { data: result });
   });
+})
+
+app.get('/associatepage', (req, res) =>{
+  res.render('associatePage.ejs')
+})
+
+//const customerresults = require('./controller/customer')
+app.get('/customer', (req, res) =>{
+  res.render('customerresults.ejs')
+})
+
+app.all('*', (req, res)=>{
+  res.status(404).send('<h1>Resource not found </h1>')
 })
 
 app.listen(port, () => {
