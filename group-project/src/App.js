@@ -10,15 +10,16 @@ import Page from './views/page';
 function App() {
   return (
     <Router>
-       <Navbar />
       <div className="App">
-        <Switch>
-          <Route exact path="/"><Home /></Route>
-          <Route path='/associatespage'><AssociatesPage /></Route>
-          <Route path='/adminpage'><AdminPage /></Route>
-          <Route path='/clerkpage'><ClerkPage /></Route>
-          <Route path='/page'><Page /></Route>
-        </Switch>
+        <Navbar />
+        <div className="App">
+          <Switch>
+            <Route exact path="/"><Home /></Route>
+            <Route path='/associatespage'><AssociatesPage /></Route>
+            <Route path='/adminpage'><AdminPage /></Route>
+            <Route path='/clerkpage'><ClerkPage /></Route>
+          </Switch>
+        </div>
       </div>
     </Router>
   );
