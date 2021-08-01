@@ -5,7 +5,6 @@ import Navbar from './components/navbar';
 import AssociatesPage from './views/associatespage';
 import AdminPage from './views/adminpage';
 import ClerkPage from './views/clerkpage';
-import Page from './views/page';
 
 function App() {
   return (
