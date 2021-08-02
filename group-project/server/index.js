@@ -16,3 +16,10 @@ app.get('/getcustomers', (req, res) => {
         res.send(list)
     });
 })
+
+const associatedata = require('./controllers/associate');
+app.get('/getassociates', (req, res) => {
+    associatedata.getAll((list) => {
+        res.send(list)
+    });
+})

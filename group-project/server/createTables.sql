@@ -1,0 +1,45 @@
+DROP TABLE IF EXISTS Notes;
+DROP TABLE IF EXISTS LineItems;
+DROP TABLE IF EXISTS Quotes;
+DROP TABLE IF EXISTS SalesAssociates;
+
+CREATE TABLE SalesAssociates(
+	AssociateID INT(5) NOT NULL AUTO_INCREMENT PRIMARY KEY,
+	Username VARCHAR(20) NOT NULL UNIQUE, 
+	Pass VARCHAR(20) NOT NULL,
+	Name VARCHAR(20) NOT NULL,
+	Commission DECIMAL (8,2) NOT NULL, 
+	Address VARCHAR(50) NOT NULL
+);
+
+CREATE TABLE Quotes (
+    QuoteID INT(5) NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    CustomerID INT(5) NOT NULL,
+    AssociateID INT(5) NOT NULL,
+    Price DECIMAL(8,2),
+    isSanctioned BOOLEAN  NOT NULL,
+    isPercentageDiscount BOOLEAN  NOT NULL,
+    Discount DOUBLE NOT NULL,
+    Email VARCHAR(255)  NOT NULL,
+
+    FOREIGN KEY (AssociateID) REFERENCES SalesAssociates(AssociateID) 
+);
+
+CREATE TABLE LineItems(
+    LineID INT(5) NOT NULL AUTO_INCREMENT,
+    QuoteID INT(5) NOT NULL,
+    ItemDescription VARCHAR(255) NOT NULL,
+    Cost DECIMAL(8,2) NOT NULL,
+
+    PRIMARY KEY (LineID, QuoteID),
+    FOREIGN KEY (QuoteID) REFERENCES Quotes(QuoteID)
+);
+
+CREATE TABLE Notes(
+    NoteID INT(5) NOT NULL AUTO_INCREMENT,
+    QuoteID INT(5) NOT NULL,
+    Note VARCHAR(255) NOT NULL,
+
+    PRIMARY KEY (NoteID, QuoteID),
+    FOREIGN KEY (QuoteID) REFERENCES Quotes(QuoteID)
+);
