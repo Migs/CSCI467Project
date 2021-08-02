@@ -12,14 +12,35 @@ app.use(bodyParser.urlencoded({extended: true}))
 
 const customerdata = require('./controllers/customer');
 app.get('/getcustomers', (req, res) => {
-    customerdata.getAll((list) => {
+    customerdata.getAllCustomers((list) => {
         res.send(list)
     });
 })
 
 const associatedata = require('./controllers/associate');
 app.get('/getassociates', (req, res) => {
-    associatedata.getAll((list) => {
+    associatedata.getAllAssociates((list) => {
+        res.send(list)
+    });
+})
+
+const quotedata = require('./controllers/quote');
+app.get('/getquotes', (req, res) => {
+    quotedata.getAllQuotes((list) => {
+        res.send(list)
+    });
+})
+
+// const linedata = require('./controllers/quote');
+app.get('/getlineitems', (req, res) => {
+    quotedata.getAllLineItems((list) => {
+        res.send(list)
+    });
+})
+
+// const notedata = require('./controllers/quote');
+app.get('/getnotes', (req, res) => {
+    quotedata.getAllNotes((list) => {
         res.send(list)
     });
 })

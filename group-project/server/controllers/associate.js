@@ -10,7 +10,7 @@ const connection = mysql.createConnection({
 connection.connect();
 
 module.exports = {
-    getAll: async result => {
+    getAllAssociates: async result => {
         connection.query('SELECT * FROM SalesAssociates', function(err, rows){
             if (err) throw err;
             console.log('rows: ', rows);
