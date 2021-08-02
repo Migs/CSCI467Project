@@ -3,6 +3,10 @@ const express = require('express');
 const app = express();
 var port = process.env.PORT || 3001
 
+app.set('view engine', 'ejs');
+var cors = require('cors');
+app.use(cors())
+
 
 app.listen(3001, () => {
     console.log('running on port 3001')
