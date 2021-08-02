@@ -17,13 +17,48 @@ app.get('/getcustomers', (req, res) => {
     });
 })
 
+// ASSOCIATE CALLS
 const associatedata = require('./controllers/associate');
-app.get('/getassociates', (req, res) => {
-    associatedata.getAllAssociates((list) => {
-        res.send(list)
-    });
+app.get('/associates', (req, res) => {
+    associatedata.getAllAssociates(
+        (list) => {res.send(list)});
 })
 
+app.get('/associates/:id', (req, res) => {
+    associatedata.getOneAssociate(
+        req.params.id, 
+        (list) => {res.send(list)});
+})
+
+app.delete('/associates/:id', (req, res) => {
+    associatedata.deleteAssociate(
+        req.params.id, 
+        (list) => {res.send(list)});
+})
+
+app.post('/associates/:id/:username/:password/:name/:commission/:address', (req, res) => {
+    associatedata.addAssociate(
+        req.params.id, 
+        req.params.username, 
+        req.params.password, 
+        req.params.name, 
+        req.params.commission, 
+        req.params.address, 
+        (list) => {res.send(list)});
+})
+
+app.put('/associates/:id/:username/:password/:name/:commission/:address', (req, res) => {
+    associatedata.updateAssociate(
+        req.params.id, 
+        req.params.username, 
+        req.params.password, 
+        req.params.name, 
+        req.params.commission, 
+        req.params.address, 
+        (list) => {res.send(list)});
+})
+
+// QUOTE CALLS
 const quotedata = require('./controllers/quote');
 app.get('/getquotes', (req, res) => {
     quotedata.getAllQuotes((list) => {
@@ -31,14 +66,14 @@ app.get('/getquotes', (req, res) => {
     });
 })
 
-// const linedata = require('./controllers/quote');
+const linedata = require('./controllers/lineitem');
 app.get('/getlineitems', (req, res) => {
     quotedata.getAllLineItems((list) => {
         res.send(list)
     });
 })
 
-// const notedata = require('./controllers/quote');
+const notedata = require('./controllers/note');
 app.get('/getnotes', (req, res) => {
     quotedata.getAllNotes((list) => {
         res.send(list)
