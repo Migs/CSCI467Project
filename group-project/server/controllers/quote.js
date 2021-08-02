@@ -18,19 +18,52 @@ module.exports = {
         });
     },
 
-    getAllLineItems: async result => {
-        connection.query('SELECT * FROM LineItems', function(err, rows){
+    getOneQuote: async (id, result) => {
+        connection.query('SELECT * FROM Quotes WHERE QuoteID = ?', [id], function(err, rows){
             if (err) throw err;
             console.log('rows: ', rows);
             result(rows);
         });
     },
 
-    getAllNotes: async result => {
-        connection.query('SELECT * FROM Notes', function(err, rows){
+    deleteQuote: async (id, result) => {
+        connection.query('DELETE FROM Quotes WHERE QuoteID = ?', [id], function(err, rows){
             if (err) throw err;
-            console.log('rows: ', rows);
+            console.log('Deleted');
             result(rows);
+        });
+    },
+
+    addQuote: async (QuoteID, CustomerID, AssociateID, Price, isSanctioned, isPercentageDiscount, Discount, Email, result) => {
+        connection.query(
+            'INSERT INTO Quotes\
+            (QuoteID, CustomerID, AssociateID, Price, isSanctioned, isPercentageDiscount, Discount, Email)\
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?)', 
+            [QuoteID, CustomerID, AssociateID, Price, isSanctioned, isPercentageDiscount, Discount, Email], 
+            function(err, rows){
+                if (err) throw err;
+                console.log('Added');
+                result(rows);
+        });
+    },
+
+    updateQuote: async (oldQuoteID, newQuoteID, CustomerID, AssociateID, Price, isSanctioned, isPercentageDiscount, Discount, Email, result) => {
+        connection.query(
+            'UPDATE Quotes\
+                SET QuoteID = ?,\
+                    CustomerID =?,\
+                    AssociateID = ?,\
+                    Price = ?,\
+                    isSanctioned = ?,\
+                    isPercentageDiscount = ?,\
+                    Discount = ?,\
+                    Email = ?\
+                WHERE QuoteID = ?', 
+            [newQuoteID, CustomerID, AssociateID, Price, isSanctioned, isPercentageDiscount, Discount, Email, oldQuoteID], 
+            function(err, rows){
+                if (err) throw err;
+                console.log('Added');
+                result(rows);
         });
     }
 }
