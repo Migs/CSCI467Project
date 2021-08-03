@@ -27,6 +27,15 @@ module.exports = {
         });
     },
 
+    getLineItemByQuoteID: async (QuoteID, result) => {
+        connection.query('SELECT * FROM LineItems WHERE QuoteID = ?', [QuoteID], 
+                        function(err, rows){
+                            if (err) throw err;
+                            console.log('rows: ', rows);
+                            result(rows);
+        }); 
+    },
+
     deleteLineItem: async (LineID, QuoteID, result) => {
         connection.query('DELETE FROM LineItems WHERE LineID = ? AND QuoteID = ?', [LineID, QuoteID], 
                         function(err, rows){

@@ -26,6 +26,22 @@ module.exports = {
         });
     },
 
+    getSanctionedQuotes: async (result) => {
+        connection.query('SELECT * FROM Quotes WHERE isSanctioned = 1', function(err, rows){
+            if (err) throw err;
+            console.log('rows: ', rows);
+            result(rows);
+        });
+    },
+
+    getUnsanctionedQuotes: async (result) => {
+        connection.query('SELECT * FROM Quotes WHERE isSanctioned = 0', function(err, rows){
+            if (err) throw err;
+            console.log('rows: ', rows);
+            result(rows);
+        });
+    },
+
     deleteQuote: async (id, result) => {
         connection.query('DELETE FROM Quotes WHERE QuoteID = ?', [id], function(err, rows){
             if (err) throw err;
@@ -34,12 +50,12 @@ module.exports = {
         });
     },
 
-    addQuote: async (QuoteID, CustomerID, AssociateID, Price, isSanctioned, isPercentageDiscount, Discount, Email, result) => {
+    addQuote: async (QuoteID, CustomerID, AssociateID, Price, isSanctioned, isPurchased, isPercentageDiscount, Discount, Email, result) => {
         connection.query(
             'INSERT INTO Quotes\
-            (QuoteID, CustomerID, AssociateID, Price, isSanctioned, isPercentageDiscount, Discount, Email)\
-            VALUES (?, ?, ?, ?, ?, ?, ?, ?)', 
-            [QuoteID, CustomerID, AssociateID, Price, isSanctioned, isPercentageDiscount, Discount, Email], 
+            (QuoteID, CustomerID, AssociateID, Price, isSanctioned, isPurchased, isPercentageDiscount, Discount, Email)\
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)', 
+            [QuoteID, CustomerID, AssociateID, Price, isSanctioned, isPurchased, isPercentageDiscount, Discount, Email], 
             function(err, rows){
                 if (err) throw err;
                 console.log('Added');
@@ -47,7 +63,7 @@ module.exports = {
         });
     },
 
-    updateQuote: async (oldQuoteID, newQuoteID, CustomerID, AssociateID, Price, isSanctioned, isPercentageDiscount, Discount, Email, result) => {
+    updateQuote: async (oldQuoteID, newQuoteID, CustomerID, AssociateID, Price, isSanctioned, isPurchased, isPercentageDiscount, Discount, Email, result) => {
         connection.query(
             'UPDATE Quotes\
                 SET QuoteID = ?,\
@@ -55,11 +71,12 @@ module.exports = {
                     AssociateID = ?,\
                     Price = ?,\
                     isSanctioned = ?,\
+                    isPurchased = ?,\
                     isPercentageDiscount = ?,\
                     Discount = ?,\
                     Email = ?\
                 WHERE QuoteID = ?', 
-            [newQuoteID, CustomerID, AssociateID, Price, isSanctioned, isPercentageDiscount, Discount, Email, oldQuoteID], 
+            [newQuoteID, CustomerID, AssociateID, Price, isSanctioned, isPurchased, isPercentageDiscount, Discount, Email, oldQuoteID], 
             function(err, rows){
                 if (err) throw err;
                 console.log('Added');

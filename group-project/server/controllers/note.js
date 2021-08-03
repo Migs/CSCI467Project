@@ -27,6 +27,15 @@ module.exports = {
         });
     },
 
+    getNoteByQuoteID: async (QuoteID, result) => {
+        connection.query('SELECT * FROM Notes WHERE QuoteID = ?', [QuoteID],  
+                        function(err, rows){
+                            if (err) throw err;
+                            console.log('rows: ', rows);
+                            result(rows);
+        });
+    },
+
     deleteNote: async (NoteID, QuoteID, result) => {
         connection.query('DELETE FROM Notes WHERE NoteID = ? AND QuoteID = ?', [NoteID, QuoteID], 
                         function(err, rows){

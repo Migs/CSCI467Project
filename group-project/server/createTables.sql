@@ -19,8 +19,10 @@ CREATE TABLE Quotes (
     Price DECIMAL(8,2),
     isSanctioned BOOLEAN  NOT NULL,
     isPercentageDiscount BOOLEAN  NOT NULL,
+    isPurchased BOOLEAN NOT NULL,
     Discount DOUBLE NOT NULL,
     Email VARCHAR(255)  NOT NULL,
+    Time TIMESTAMP NOT NULL,
 
     FOREIGN KEY (AssociateID) REFERENCES SalesAssociates(AssociateID) 
 );
