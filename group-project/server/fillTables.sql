@@ -39,37 +39,43 @@ INSERT INTO SalesAssociates
 -- sample data for Quotes
 
 INSERT INTO Quotes
-    (QuoteID, CustomerID, AssociateID, Price, isSanctioned, isPercentageDiscount, Discount, Email)
+    (QuoteID, CustomerID, AssociateID, Price, isSanctioned, isPurchased, isPercentageDiscount, Discount, Email, Time)
     VALUES (1,
             1, 
             1,
             100000.00, 
-            1, 
+            1,
+            0, 
             1,
             14.2, 
-            'sales@company.com');
+            'sales@company.com',
+            null);
 
 INSERT INTO Quotes
-    (QuoteID, CustomerID, AssociateID, Price, isSanctioned, isPercentageDiscount, Discount, Email)
+    (QuoteID, CustomerID, AssociateID, Price, isSanctioned, isPurchased, isPercentageDiscount, Discount, Email, Time)
     VALUES (2,
             2, 
             2,
             1234.53, 
-            0, 
+            0,
+            0,
             1,
             12, 
-            'accounts@corporation.com');
+            'accounts@corporation.com',
+            null);
 
 INSERT INTO Quotes
-    (QuoteID, CustomerID, AssociateID, Price, isSanctioned, isPercentageDiscount, Discount, Email)
+    (QuoteID, CustomerID, AssociateID, Price, isSanctioned, isPurchased, isPercentageDiscount, Discount, Email, Time)
     VALUES (3,
             1, 
             4,
             2048.12, 
             0, 
             0,
+            0,
             61.88, 
-            'contact@business.com');
+            'contact@business.com',
+            null);
 
 
 -- sample data for LineItems

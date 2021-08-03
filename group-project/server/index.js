@@ -78,26 +78,39 @@ app.get('/quotes/:QuoteID', (req, res) => {
         (list) => {res.send(list)});
 })
 
+app.get('/sanctionedquotes', (req, res) => {
+    quotedata.getSanctionedQuotes((list) => {
+        res.send(list)
+    });
+})
+
+app.get('/unsanctionedquotes', (req, res) => {
+    quotedata.getUnsanctionedQuotes((list) => {
+        res.send(list)
+    });
+})
+
 app.delete('/quotes/:QuoteID', (req, res) => {
     quotedata.deleteQuote(
         req.params.QuoteID, 
         (list) => {res.send(list)});
 })
 
-app.post('/quotes/:QuoteID/:CustomerID/:AssociateID/:price/:issanctioned/:ispercentagediscount/:discount/:email', (req, res) => {
+app.post('/quotes/:QuoteID/:CustomerID/:AssociateID/:price/:issanctioned/:ispurchased/:ispercentagediscount/:discount/:email', (req, res) => {
     quotedata.addQuote(
         req.params.QuoteID, 
         req.params.CustomerID, 
         req.params.AssociateID, 
         req.params.price, 
         req.params.issanctioned, 
+        req.params.ispurchased, 
         req.params.ispercentagediscount,
         req.params.discount, 
         req.params.email,
         (list) => {res.send(list)});
 })
 
-app.put('/quotes/:oldQuoteID/:newQuoteID/:CustomerID/:AssociateID/:price/:issanctioned/:ispercentagediscount/:discount/:email', (req, res) => {
+app.put('/quotes/:oldQuoteID/:newQuoteID/:CustomerID/:AssociateID/:price/:issanctioned/:ispurchased/:ispercentagediscount/:discount/:email', (req, res) => {
     quotedata.updateQuote(
         req.params.oldQuoteID, 
         req.params.newQuoteID, 
@@ -105,6 +118,7 @@ app.put('/quotes/:oldQuoteID/:newQuoteID/:CustomerID/:AssociateID/:price/:issanc
         req.params.AssociateID, 
         req.params.price, 
         req.params.issanctioned, 
+        req.params.ispurchased, 
         req.params.ispercentagediscount,
         req.params.discount, 
         req.params.email, 
