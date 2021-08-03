@@ -11,9 +11,12 @@ app.use(cors())
 app.use(bodyParser.urlencoded({extended: true}))
 app.use(bodyParser.json());
 
+app.listen(3001, () => {
+    console.log('running on port 3001');
+})
+
 const customerdata = require('./controllers/customer');
 app.get('/getcustomers', (req, res) => {
-
     customerdata.getAllCustomers((list) => {
         res.send(list)
     });
