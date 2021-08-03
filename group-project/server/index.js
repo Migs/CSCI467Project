@@ -153,6 +153,12 @@ app.delete('/lineitems/:LineID/:QuoteID', (req, res) => {
         (list) => {res.send(list)});
 })
 
+app.delete('/lineitems/:QuoteID', (req, res) => {
+    linedata.deleteLineItemsByQuoteID(
+        req.params.QuoteID, 
+        (list) => {res.send(list)});
+})
+
 app.post('/lineitems/:LineID/:QuoteID/:itemdescription/:cost', (req, res) => {
     linedata.addLineItem(
         req.params.LineID, 
@@ -197,6 +203,12 @@ app.get('/notes/:QuoteID', (req, res) => {
 app.delete('/notes/:NoteID/:QuoteID', (req, res) => {
     notedata.deleteNote(
         req.params.NoteID, 
+        req.params.QuoteID, 
+        (list) => {res.send(list)});
+})
+
+app.delete('/notes/:QuoteID', (req, res) => {
+    notedata.deleteNoteByQuoteID( 
         req.params.QuoteID, 
         (list) => {res.send(list)});
 })
