@@ -19,6 +19,8 @@ import SaveAlt from '@material-ui/icons/SaveAlt';
 import Search from '@material-ui/icons/Search';
 import ViewColumn from '@material-ui/icons/ViewColumn';
 import { useHistory } from 'react-router-dom';
+import { alpha } from '@material-ui/core/styles';
+import {Button} from '@material-ui/core';
 
 
 const tableIcons = {
@@ -47,6 +49,7 @@ function EditQuote(props){
     const [notedata, setNotedata] = useState([]);
     let history = useHistory();
     const location = useLocation();
+    var finalPrice = 0;
     
 	//Something probably needs to go here to define the data that was sent from the previous page
 
@@ -70,11 +73,9 @@ function EditQuote(props){
     useEffect(() => {
             axios.get('http://localhost:3001/lineitems/' + location.state.data.QuoteID).then((res) => {
                 setLinedata(res.data);
-                console.log(res.data);
             });
             axios.get('http://localhost:3001/notes/' + location.state.data.QuoteID).then((res) => {
                 setNotedata(res.data);
-                console.log(res.data);
             });
     }, []);
 
@@ -84,18 +85,96 @@ function EditQuote(props){
             state: {data: rowData}
         })
     };
+
+    const handleRowUpdate = (newData, oldData, resolve) => {
+
+        
+
+        axios.put('http://localhost:3001/lineitems/' + oldData.LineID + '/' + newData.LineID + '/' + oldData.QuoteID + '/' + newData.QuoteID + '/' +
+        newData.ItemDescription + '/' + newData.Cost).then((res) => {
+            axios.get('http://localhost:3001/lineitems/' + location.state.data.QuoteID).then((result) => {
+                finalPrice = result.data.reduce((a, { Cost }) => parseInt(a) + parseInt(Cost), 0);
+                console.log(result.data);
+                console.log(finalPrice)
+                axios.put('http://localhost:3001/quotes/' + location.state.data.QuoteID + '/' + location.state.data.QuoteID + '/' +
+                    location.state.data.CustomerID + '/' + location.state.data.AssociateID + '/' + finalPrice + '/0/' + location.state.data.isPurchased + '/' + location.state.data.isPercentageDiscount + '/' +
+                    location.state.data.Discount + '/' + location.state.data.Email).then((results) => {
+                        console.log(results.data);
+                })
+            });
+
+            window.location.reload(false);
+        })
+    }
+
+    const handleNoteRowUpdate = (newData, oldData, resolve) => {
+
+        axios.put('http://localhost:3001/notes/' + oldData.NoteID + '/' + newData.NoteID + '/' + oldData.QuoteID + '/' + newData.QuoteID + '/' +
+        newData.Note).then((res) => {
+            window.location.reload(false);
+        })
+    }
+
+    const handleRowDelete = (oldData, resolve) => {
+        axios.delete('http://localhost:3001/lineitems/' + oldData.LineID + '/' + oldData.QuoteID).then((res) => {
+            axios.put('http://localhost:3001/quotes/' + location.state.data.QuoteID + '/' + location.state.data.QuoteID + '/' +
+            location.state.data.CustomerID + '/' + location.state.data.AssociateID + '/' + finalPrice + '/0/' + location.state.data.isPurchased + '/' + location.state.data.isPercentageDiscount + '/' +
+            location.state.data.Discount + '/' + location.state.data.Email).then((res) => {
+            console.log(res.data);
+        })
+            window.location.reload(false);
+        })
+    }
+
+    const handleNoteRowDelete = (oldData, resolve) => {
+        axios.delete('http://localhost:3001/notes/' + oldData.NoteID + '/' + oldData.QuoteID).then((res) => {
+            window.location.reload(false);
+        })
+    }
+
+    const handleBack = () => {
+        history.push('/clerkpage1');
+    };
+
+    const handleFinalize = () => {
+        
+        if(location.state.data.isPercentageDiscount){
+            finalPrice = location.state.data.Price - location.state.data.Price * location.state.data.Discount;
+        }
+        else{
+            finalPrice = location.state.data.Price - location.state.data.discount
+        }
+
+        axios.put('http://localhost:3001/quotes/' + location.state.data.QuoteID + '/' + location.state.data.QuoteID + '/' +
+        location.state.data.CustomerID + '/' + location.state.data.AssociateID + '/' + finalPrice + '/1/' + location.state.data.isPurchased + '/' + location.state.data.isPercentageDiscount + '/' +
+        location.state.data.Discount + '/' + location.state.data.Email).then((res) => {
+            console.log(res.data);
+            history.push('/clerkpage2');
+        })
+    };
 	
 	//Create the Line Items table
 	//Going to need an onRowUpdate/onRowDelete/onRowAdd so we can edit
     return(
         <>
             <div>
+                <Button variant="outlined" onClick={handleFinalize}>Finalize Quote</Button>
+                <Button variant="outlined" onClick={handleBack}>Go Back</Button>
                 <MaterialTable title="Line Items"
                 data={linedata}
                 columns={lineColumns}
                 icons={tableIcons}
                 options={{filtering:true}}
-                onRowClick={handleRowClick}>
+                editable={{
+                    onRowUpdate: (newData, oldData) =>
+                    new Promise((resolve) => {
+                        handleRowUpdate(newData, oldData, resolve);
+                    }),
+                    onRowDelete: (oldData) =>
+                        new Promise((resolve) => {
+                            handleRowDelete(oldData, resolve)
+                        })
+                }}>
                 </MaterialTable>
             </ div>
             <div>
@@ -104,7 +183,16 @@ function EditQuote(props){
                 columns={noteColumns}
                 icons={tableIcons}
                 options={{filtering:true}}
-                onRowClick={handleRowClick}>
+                editable={{
+                    onRowUpdate: (newData, oldData) =>
+                    new Promise((resolve) => {
+                        handleNoteRowUpdate(newData, oldData, resolve);
+                    }),
+                    onRowDelete: (oldData) =>
+                        new Promise((resolve) => {
+                            handleNoteRowDelete(oldData, resolve)
+                        })
+                }}>
                 </MaterialTable>
             </ div>
         </>
