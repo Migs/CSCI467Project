@@ -140,6 +140,12 @@ app.get('/lineitems/:LineID/:QuoteID', (req, res) => {
         (list) => {res.send(list)});
 })
 
+app.get('/lineitems/:QuoteID', (req, res) => {
+    linedata.getLineItemByQuoteID(
+        req.params.QuoteID, 
+        (list) => {res.send(list)});
+})
+
 app.delete('/lineitems/:LineID/:QuoteID', (req, res) => {
     linedata.deleteLineItem(
         req.params.LineID, 
@@ -178,6 +184,12 @@ app.get('/notes', (req, res) => {
 app.get('/notes/:NoteID/:QuoteID', (req, res) => {
     notedata.getOneNote(
         req.params.NoteID, 
+        req.params.QuoteID, 
+        (list) => {res.send(list)});
+})
+
+app.get('/notes/:QuoteID', (req, res) => {
+    notedata.getNoteByQuoteID(
         req.params.QuoteID, 
         (list) => {res.send(list)});
 })
