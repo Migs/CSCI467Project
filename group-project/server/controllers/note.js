@@ -45,6 +45,15 @@ module.exports = {
         });
     },
 
+    deleteNoteByQuoteID: async (QuoteID, result) => {
+        connection.query('DELETE FROM Notes WHERE QuoteID = ?', [QuoteID], 
+                        function(err, rows){
+                            if (err) throw err;
+                            console.log('Deleted');
+                            result(rows);
+        });
+    },
+
     addNote: async (NoteID, QuoteID, Note, result) => {
         connection.query(
             'INSERT INTO Notes\

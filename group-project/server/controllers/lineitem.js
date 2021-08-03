@@ -45,6 +45,15 @@ module.exports = {
         });
     },
 
+    deleteLineItemsByQuoteID: async (QuoteID, result) => {
+        connection.query('DELETE FROM LineItems WHERE QuoteID = ?', [QuoteID], 
+                        function(err, rows){
+                            if (err) throw err;
+                            console.log('Deleted');
+                            result(rows);
+        });
+    },
+
     addLineItem: async (LineID, QuoteID, ItemDescription, Cost, result) => {
         connection.query(
             'INSERT INTO LineItems\
