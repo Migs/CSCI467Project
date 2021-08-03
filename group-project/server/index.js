@@ -12,7 +12,8 @@ app.listen(3001, () => {
     console.log('running on port 3001')
 })
 
-app.use(bodyParser.urlencoded({extended: true}))
+app.use(bodyParser.urlencoded({extended: true}));
+app.use(bodyParser.json());
 
 const customerdata = require('./controllers/customer');
 app.get('/getcustomers', (req, res) => {
