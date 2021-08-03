@@ -79,32 +79,25 @@ function EditQuote(props){
             });
     }, []);
 
-    function handleRowClick(event, rowData){
-        history.push({
-            pathname: '/finalizequote',
-            state: {data: rowData}
-        })
-    };
-
     const handleRowUpdate = (newData, oldData, resolve) => {
-
-        
 
         axios.put('http://localhost:3001/lineitems/' + oldData.LineID + '/' + newData.LineID + '/' + oldData.QuoteID + '/' + newData.QuoteID + '/' +
         newData.ItemDescription + '/' + newData.Cost).then((res) => {
             axios.get('http://localhost:3001/lineitems/' + location.state.data.QuoteID).then((result) => {
-                finalPrice = result.data.reduce((a, { Cost }) => parseInt(a) + parseInt(Cost), 0);
-                console.log(result.data);
-                console.log(finalPrice)
+
+                //finalPrice = result.data.reduce((a, { Cost }) => parseInt(a) + parseInt(Cost), 0);
+
                 axios.put('http://localhost:3001/quotes/' + location.state.data.QuoteID + '/' + location.state.data.QuoteID + '/' +
-                    location.state.data.CustomerID + '/' + location.state.data.AssociateID + '/' + finalPrice + '/0/' + location.state.data.isPurchased + '/' + location.state.data.isPercentageDiscount + '/' +
+                    location.state.data.CustomerID + '/' + location.state.data.AssociateID + '/' + result.data.reduce((a, { Cost }) => parseInt(a) + parseInt(Cost), 0)
+                    + '/0/' + location.state.data.isPurchased + '/' +
+                    location.state.data.isPercentageDiscount + '/' +
                     location.state.data.Discount + '/' + location.state.data.Email).then((results) => {
                         console.log(results.data);
                 })
             });
-
-            window.location.reload(false);
+            console.log(location.state.data);
         })
+        window.location.reload(false);
     }
 
     const handleNoteRowUpdate = (newData, oldData, resolve) => {
@@ -117,13 +110,17 @@ function EditQuote(props){
 
     const handleRowDelete = (oldData, resolve) => {
         axios.delete('http://localhost:3001/lineitems/' + oldData.LineID + '/' + oldData.QuoteID).then((res) => {
-            axios.put('http://localhost:3001/quotes/' + location.state.data.QuoteID + '/' + location.state.data.QuoteID + '/' +
-            location.state.data.CustomerID + '/' + location.state.data.AssociateID + '/' + finalPrice + '/0/' + location.state.data.isPurchased + '/' + location.state.data.isPercentageDiscount + '/' +
-            location.state.data.Discount + '/' + location.state.data.Email).then((res) => {
-            console.log(res.data);
+
+            axios.get('http://localhost:3001/lineitems/' + location.state.data.QuoteID).then((reply) => {
+                setLinedata(reply.data);
+                axios.put('http://localhost:3001/quotes/' + location.state.data.QuoteID + '/' + location.state.data.QuoteID + '/' +
+                location.state.data.CustomerID + '/' + location.state.data.AssociateID + '/' + reply.data.reduce((a, { Cost }) => parseInt(a) + parseInt(Cost), 0) + '/0/' + location.state.data.isPurchased + '/' + location.state.data.isPercentageDiscount + '/' +
+                location.state.data.Discount + '/' + location.state.data.Email).then((res) => {
+                console.log(res.data);
+            })
+            });
         })
-            window.location.reload(false);
-        })
+        window.location.reload(false);
     }
 
     const handleNoteRowDelete = (oldData, resolve) => {
@@ -139,10 +136,10 @@ function EditQuote(props){
     const handleFinalize = () => {
         
         if(location.state.data.isPercentageDiscount){
-            finalPrice = location.state.data.Price - location.state.data.Price * location.state.data.Discount;
+            finalPrice = location.state.data.Price - location.state.data.Price * location.state.data.Discount/100;
         }
         else{
-            finalPrice = location.state.data.Price - location.state.data.discount
+            finalPrice = location.state.data.Price - location.state.data.Discount
         }
 
         axios.put('http://localhost:3001/quotes/' + location.state.data.QuoteID + '/' + location.state.data.QuoteID + '/' +

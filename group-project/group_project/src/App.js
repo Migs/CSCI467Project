@@ -11,6 +11,7 @@ import EditQuote from './views/editquote';
 import FinalizeQuote from './views/finalizequote';
 import QuoteConfirmation from './views/quoteconfirmation';
 import EditAssociate from './views/editassociate';
+import FinalizeConfirmation from './views/finalizeconfirmation';
 
 
 function App() {
@@ -29,6 +30,7 @@ function App() {
             <Route path='/finalizequote'><FinalizeQuote /></Route>
             <Route path='/setquote'><SetQuote /></Route>
             <Route path='/quoteconfirmation'><QuoteConfirmation /></Route>
+            <Route path='/finalizeconfirmation'><FinalizeConfirmation /></Route>
             <Route path='/editassociate'><EditAssociate /></Route>
           </Switch>
         </div>
