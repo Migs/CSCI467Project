@@ -1,5 +1,6 @@
 const bodyParser = require('body-parser');
 const express = require('express');
+const nodemailer = require('nodemailer');
 const app = express();
 var port = process.env.PORT || 3001
 
@@ -7,6 +8,15 @@ app.set('view engine', 'ejs');
 var cors = require('cors');
 app.use(cors())
 
+let transporter = nodemailer.createTransport({
+    port: 465,               // true for 465, false for other ports
+    host: "smtp.gmail.com",
+       auth: {
+            user: 'CSCI467Group1B@gmail.com',
+            pass: 'csci467group1b',
+         },
+    secure: true,
+    });
 
 app.listen(3001, () => {
     console.log('running on port 3001')
@@ -230,3 +240,22 @@ app.put('/notes/:oldNoteID/:newNoteID/:oldQuoteID/:newQuoteID/:note', (req, res)
         req.params.note,
         (list) => {res.send(list)});
 })
+
+
+// send email to customer
+app.post('/emailcustomer', (req, res) => {
+    const {to, subject, html} = req.body;
+    var mailData = {
+        from: 'CSCI467Group1B@gmail.com',
+        to: to,
+        subject: subject,
+        html: html
+    };
+
+    transporter.sendMail(mailData, (error, info) => {
+        if (error) {
+            return console.log(error);
+        }
+        res.status(200).send({ message: "Mail Send", message_id: info.messageId});
+    });
+});
