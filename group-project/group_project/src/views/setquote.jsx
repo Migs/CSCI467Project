@@ -1,9 +1,11 @@
-import {React, useState, useEffect} from 'react';
-import {useLocation } from 'react-router-dom';
+import { React, useState } from 'react';
+import {useHistory, useLocation } from 'react-router-dom';
 import {Button, Checkbox, TextField} from '@material-ui/core';
 import axios from 'axios';
 
 function SetQuote(){
+    let history = useHistory();
+
     const location = useLocation();
     const [inputList, setInputList] = useState([{ lineItem: '', price: 0, description: ''}]);
     const [notesList, setNotesList] = useState([{notes: ''}]);
@@ -84,9 +86,16 @@ function SetQuote(){
     }
 
     const submitQuote = () => {
-        console.log(location.state.data);
-        axios.post('/quotes/null/' + location.state.data.id +'/'+associateid+'/'+totalprice+'/0/0/'+percentdiscount+'/'+quote.discount+'/'+quote.email).then((res) => {
-                console.log(res.data);
+        axios.post('http://localhost:3001/quotes/null/' + location.state.data.id +'/'+associateid+'/'+totalprice+'/0/0/'+percentdiscount+'/'+quote.discount+'/'+quote.email).then((res) => {
+            inputList.map((x) => {
+                    axios.post('http://localhost:3001/lineitems/null/'+res.data.insertId+'/'+x.description+'/'+x.price).then((result) => {
+                    })
+                });
+            notesList.map((x) => {
+                axios.post('http://localhost:3001/notes/null/'+res.data.insertId+'/'+x.notes).then((results) => {
+                        history.push('/quoteconfirmation')
+                    })
+                });
             });
     }
 
@@ -114,8 +123,7 @@ function SetQuote(){
                             </div>
                         </>
                     );
-                })
-                    
+                }) 
                 }
                 <TextField disabled id="price" label="Price" type="number" defaultValue={totalprice} value={totalprice}/>
                 <TextField disabled id="reducedprice" label="Reduced Price" type="number" defaultValue={reducedprice} value={reducedprice}/><br />

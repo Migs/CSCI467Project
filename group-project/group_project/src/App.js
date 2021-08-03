@@ -6,6 +6,7 @@ import AssociatesPage from './views/associatespage';
 import AdminPage from './views/adminpage';
 import ClerkPage from './views/clerkpage';
 import SetQuote from './views/setquote';
+import QuoteConfirmation from './views/quoteconfirmation';
 
 function App() {
   return (
@@ -19,6 +20,7 @@ function App() {
             <Route path='/adminpage'><AdminPage /></Route>
             <Route path='/clerkpage'><ClerkPage /></Route>
             <Route path='/setquote'><SetQuote /></Route>
+            <Route path='/quoteconfirmation'><QuoteConfirmation /></Route>
           </Switch>
         </div>
       </div>
