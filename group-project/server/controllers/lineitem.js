@@ -33,7 +33,7 @@ module.exports = {
                             if (err) throw err;
                             console.log('rows: ', rows);
                             result(rows);
-        });
+        }); 
     },
 
     deleteLineItem: async (LineID, QuoteID, result) => {

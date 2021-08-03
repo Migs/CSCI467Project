@@ -28,7 +28,7 @@ module.exports = {
     },
 
     getNoteByQuoteID: async (QuoteID, result) => {
-        connection.query('SELECT * FROM Notes WHERE QuoteID = ?', [QuoteID], 
+        connection.query('SELECT * FROM Notes WHERE QuoteID = ?', [QuoteID],  
                         function(err, rows){
                             if (err) throw err;
                             console.log('rows: ', rows);
