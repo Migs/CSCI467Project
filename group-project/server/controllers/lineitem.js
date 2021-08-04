@@ -1,5 +1,7 @@
 const mysql = require('mysql');
 
+// connection to mysql database
+// currently connects to locally hosted database
 const connection = mysql.createConnection({
     host: 'localhost',
     user: 'root',
@@ -9,7 +11,9 @@ const connection = mysql.createConnection({
 
 connection.connect();
 
+// export functions to be used by RESTful API calls
 module.exports = {
+    // get all line items
     getAllLineItems: async result => {
         connection.query('SELECT * FROM LineItems', function(err, rows){
             if (err) throw err;
@@ -18,6 +22,7 @@ module.exports = {
         });
     },
 
+    // get one line item by combination of LineID and QuoteID
     getOneLineItem: async (LineID, QuoteID, result) => {
         connection.query('SELECT * FROM LineItems WHERE LineID = ? AND QuoteID = ?', [LineID, QuoteID], 
                         function(err, rows){
@@ -27,6 +32,7 @@ module.exports = {
         });
     },
 
+    // get all line items associated with one QuoteID
     getLineItemByQuoteID: async (QuoteID, result) => {
         connection.query('SELECT * FROM LineItems WHERE QuoteID = ?', [QuoteID], 
                         function(err, rows){
@@ -36,6 +42,7 @@ module.exports = {
         }); 
     },
 
+    // delete a line item record by combination of LineID and QuoteID
     deleteLineItem: async (LineID, QuoteID, result) => {
         connection.query('DELETE FROM LineItems WHERE LineID = ? AND QuoteID = ?', [LineID, QuoteID], 
                         function(err, rows){
@@ -45,6 +52,7 @@ module.exports = {
         });
     },
 
+    // delete all line items record associated with a QuoteID
     deleteLineItemsByQuoteID: async (QuoteID, result) => {
         connection.query('DELETE FROM LineItems WHERE QuoteID = ?', [QuoteID], 
                         function(err, rows){
@@ -54,6 +62,7 @@ module.exports = {
         });
     },
 
+    // insert a line item record
     addLineItem: async (LineID, QuoteID, ItemDescription, Cost, result) => {
         connection.query(
             'INSERT INTO LineItems\
@@ -67,6 +76,7 @@ module.exports = {
         });
     },
 
+    // update an existing line item record
     updateLineItem: async (oldLineID, newLineID, oldQuoteID, newQuoteID, ItemDescription, Cost, result) => {
         connection.query(
             'UPDATE LineItems\

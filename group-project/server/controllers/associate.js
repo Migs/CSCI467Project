@@ -1,5 +1,7 @@
 const mysql = require('mysql');
 
+// connection to mysql database
+// currently connects to locally hosted database
 const connection = mysql.createConnection({
     host: 'localhost',
     user: 'root',
@@ -9,7 +11,9 @@ const connection = mysql.createConnection({
 
 connection.connect();
 
+// export functions to be used by RESTful API calls
 module.exports = {
+    // get all associates
     getAllAssociates: async result => {
         connection.query('SELECT * FROM SalesAssociates', function(err, rows){
             if (err) throw err;
@@ -18,6 +22,7 @@ module.exports = {
         });
     },
 
+    // get one associate by AssociateID
     getOneAssociate: async (AssociateID, result) => {
         connection.query('SELECT * FROM SalesAssociates WHERE AssociateID = ?', [AssociateID], function(err, rows){
             if (err) throw err;
@@ -26,6 +31,7 @@ module.exports = {
         });
     },
 
+    // delete one associate record by AssociateID
     deleteAssociate: async (AssociateID, result) => {
         connection.query('DELETE FROM SalesAssociates WHERE AssociateID = ?', [AssociateID], function(err, rows){
             if (err) throw err;
@@ -34,6 +40,7 @@ module.exports = {
         });
     },
 
+    // add an associate record
     addAssociate: async (AssociateID, Username, Password, Name, Commission, Address, result) => {
         connection.query(
             'INSERT INTO SalesAssociates\
@@ -47,6 +54,7 @@ module.exports = {
         });
     },
 
+    // update an existing associate record
     updateAssociate: async (oldAssociateID, newAssociateID, Username, Password, Name, Commission, Address, result) => {
         connection.query(
             'UPDATE SalesAssociates\
