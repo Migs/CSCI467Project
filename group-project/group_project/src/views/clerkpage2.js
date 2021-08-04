@@ -18,7 +18,7 @@ import Search from '@material-ui/icons/Search';
 import ViewColumn from '@material-ui/icons/ViewColumn';
 import { useHistory } from 'react-router-dom';
 
-
+// all the icons used in the tables
 const tableIcons = {
         Add: forwardRef((props, ref) => <AddBox {...props} ref={ref} />),
         Check: forwardRef((props, ref) => <Check {...props} ref={ref} />),
@@ -37,13 +37,14 @@ const tableIcons = {
         SortArrow: forwardRef((props, ref) => <ArrowDownward {...props} ref={ref} />),
         ThirdStateCheck: forwardRef((props, ref) => <Remove {...props} ref={ref} />),
         ViewColumn: forwardRef((props, ref) => <ViewColumn {...props} ref={ref} />)
-    };
+};
 
+//Function to render the associates page
 function AssociatesPage(props){
     const [customerdata, setCustomerdata] = useState([]);
     let history = useHistory();
     
-
+    //structure of the columns for the table
     const columns = [
         {title: 'Quote ID', field:'QuoteID', hidden:true},
         {title: 'CustomerID', field:'CustomerID'},
@@ -59,12 +60,15 @@ function AssociatesPage(props){
 
 
     useEffect(() => {
+            //axios call to get all the sanctioned quotes
             axios.get('http://localhost:3001/sanctionedquotes').then((res) => {
                 setCustomerdata(res.data);
                 console.log(res.data);
             });
     }, []);
 
+    //function to handle on row clicks
+    //redirect you to a page to finalize the quote
     function handleRowClick(event, rowData){
         history.push({
             pathname: '/finalizequote',
@@ -74,6 +78,7 @@ function AssociatesPage(props){
 
     return(
         <div>
+            {/* MaterialTable to house all the sanctioned quotes */}
             <MaterialTable title="Sanctioned Quotes"
             data={customerdata}
             columns={columns}

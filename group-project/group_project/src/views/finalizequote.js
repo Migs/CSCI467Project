@@ -3,6 +3,7 @@ import React, { useEffect, useState } from 'react';
 import { useHistory, useLocation } from 'react-router-dom';
 import axios from 'axios'
 
+//Function to render the finalized quotes page
 function FinalizeQuote(){
     let history = useHistory();
     const location = useLocation();
@@ -10,8 +11,8 @@ function FinalizeQuote(){
     var price = location.state.data.Price;
     const [finalprice, setFinalPrice] = useState(location.state.data.Price);
     const [tempprice, setTempPrice] = useState(location.state.data.Price);
-    //const [associatedata, setAssociateData] = useState({});
 
+    //Used to calculate the Price after discount
     useEffect(() => {
         if(location.state.data.isPercentageDiscount){
             setFinalPrice(location.state.data.Price - location.state.data.Price * location.state.data.Discount/100);
@@ -23,8 +24,10 @@ function FinalizeQuote(){
         }
     }, []);
 
-
+    //Used to handle the click of the finalization button
     const handleClick = () => {
+
+        //axios call to update the quote and indicate that it is finalized
         axios.put('http://localhost:3001/quotes/' + location.state.data.QuoteID + '/' + location.state.data.QuoteID + '/' +
         location.state.data.CustomerID + '/' + location.state.data.AssociateID + '/' + finalprice + '/' +
         location.state.data.isSanctioned + '/1/' + location.state.data.isPercentageDiscount + '/' +
@@ -35,6 +38,7 @@ function FinalizeQuote(){
                 custid: location.state.data.CustomerID,
                 amount: finalprice
             };
+            //gets information from the purchaseorder external component
             axios.post('http://blitz.cs.niu.edu/PurchaseOrder/', article).then((results) => {
                 var str = results.data.commission;
                 str.slice(0, -1);
@@ -42,6 +46,7 @@ function FinalizeQuote(){
                 commissions = finalprice * commissions/100;
                 console.log(commissions);
 
+                //applies the commission to the associates account
                 axios.get('http://localhost:3001/associates/' + location.state.data.AssociateID).then((response) => {
                         //setAssociateData(response.data[0]);
                         console.log(response.data[0].Commission);

@@ -3,6 +3,7 @@ import {useHistory, useLocation } from 'react-router-dom';
 import {Button, Checkbox, TextField} from '@material-ui/core';
 import axios from 'axios';
 
+//Function used to create a new quote
 function SetQuote(){
     let history = useHistory();
 
@@ -18,6 +19,7 @@ function SetQuote(){
     var [totalprice, setTotalPrice] = useState(0);
     var [reducedprice, setReducedPrice] = useState(0);
 
+    //Sums the input list to give a total amount
     const sumInputList = () => {
         const tprice = inputList.reduce((a, { price }) => parseInt(a) + parseInt(price), 0);
         var rprice = 0;
@@ -32,6 +34,7 @@ function SetQuote(){
         setReducedPrice(rprice);
     };
 
+    //Updates the lineitems information
     const handleInputChange = (e, index) => {
         const { name, value } = e.target;
         const list = [...inputList];
@@ -40,6 +43,7 @@ function SetQuote(){
         sumInputList();
     };
 
+    //Updates the Notes information
     const handleNotesInputChange = (e, index) => {
         const { name, value } = e.target;
         const list = [...notesList];
@@ -47,6 +51,7 @@ function SetQuote(){
         setNotesList(list);
     };
 
+    //removes an inline item form the list
     const handleRemoveClick = index => {
         const list = [...inputList];
         list.splice(index, 1);
@@ -54,6 +59,7 @@ function SetQuote(){
         sumInputList();
     };
 
+    //removes a note from the list
     const handleRemoveNotesClick = index => {
         const list = [...notesList];
         list.splice(index, 1);
@@ -61,15 +67,18 @@ function SetQuote(){
         sumInputList();
     };
 
+    //adds an inline item line to add more inline items
     const handleAddClick = () => {
         setInputList([...inputList, { lineItem: '', price: 0}]);
         sumInputList();
     };
 
+    //adds a notes textview to add more notes
     const handleAddNotesClick = () => {
         setNotesList([...notesList, { notes: ''}]);
     };
 
+    //updates the discount information
     const handleDiscountChange = (e) => {
         setQuotes({
             email: quote.email,
@@ -77,6 +86,7 @@ function SetQuote(){
         });
     }
 
+    //handles the information change
     const handleEmailChange = (e) => {
         
         setQuotes({
@@ -85,7 +95,9 @@ function SetQuote(){
         });
     }
 
+    //submits a quote
     const submitQuote = () => {
+        //axios to submit a quote
         axios.post('http://localhost:3001/quotes/null/' + location.state.data.id +'/'+associateid+'/'+totalprice+'/0/0/'+percentdiscount+'/'+quote.discount+'/'+quote.email).then((res) => {
             inputList.map((x) => {
                     axios.post('http://localhost:3001/lineitems/null/'+res.data.insertId+'/'+x.description+'/'+x.price).then((result) => {
@@ -99,6 +111,7 @@ function SetQuote(){
             });
     }
 
+    //returns html to render the quotes page
     return(
         <>
             <form>

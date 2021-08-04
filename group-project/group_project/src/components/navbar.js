@@ -2,6 +2,7 @@ import React from 'react';
 import { NavLink } from "react-router-dom";
 import '../css/Navbar.css';
 
+//Navbar function, returns a navbar that allows you to switch between pages.
 function Navbar() {
     return (
         <div className="navbardiv">

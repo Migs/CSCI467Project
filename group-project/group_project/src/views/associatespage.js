@@ -18,7 +18,7 @@ import Search from '@material-ui/icons/Search';
 import ViewColumn from '@material-ui/icons/ViewColumn';
 import { useHistory } from 'react-router-dom';
 
-
+//All the table icons used in the table
 const tableIcons = {
         Add: forwardRef((props, ref) => <AddBox {...props} ref={ref} />),
         Check: forwardRef((props, ref) => <Check {...props} ref={ref} />),
@@ -39,11 +39,13 @@ const tableIcons = {
         ViewColumn: forwardRef((props, ref) => <ViewColumn {...props} ref={ref} />)
     };
 
+
+//Function to render the AssociatesPage    
 function AssociatesPage(props){
     const [customerdata, setCustomerdata] = useState([]);
     let history = useHistory();
     
-
+    //Used to tell MaterialTable the structure of the data
     const columns = [
         {title: 'ID', field:'id', hidden:true},
         {title: 'Name', field:'name'},
@@ -54,12 +56,14 @@ function AssociatesPage(props){
 
 
     useEffect(() => {
+            //Axios call to get customer information
             axios.get('http://localhost:3001/getcustomers').then((res) => {
                 setCustomerdata(res.data);
                 console.log(res.data);
             });
     }, []);
 
+    //function to redirect to a page where you can enter a quote for a customer
     function handleRowClick(event, rowData){
         history.push({
             pathname: '/setquote',
@@ -69,6 +73,7 @@ function AssociatesPage(props){
 
     return(
         <div>
+            {/* MaterialTable to house all the customer information */}
             <MaterialTable title="Customer Table"
             data={customerdata}
             columns={columns}

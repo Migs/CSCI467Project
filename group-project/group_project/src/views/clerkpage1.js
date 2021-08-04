@@ -18,7 +18,7 @@ import Search from '@material-ui/icons/Search';
 import ViewColumn from '@material-ui/icons/ViewColumn';
 import { useHistory } from 'react-router-dom';
 
-
+//All the table icons used in the tables
 const tableIcons = {
         Add: forwardRef((props, ref) => <AddBox {...props} ref={ref} />),
         Check: forwardRef((props, ref) => <Check {...props} ref={ref} />),
@@ -37,13 +37,15 @@ const tableIcons = {
         SortArrow: forwardRef((props, ref) => <ArrowDownward {...props} ref={ref} />),
         ThirdStateCheck: forwardRef((props, ref) => <Remove {...props} ref={ref} />),
         ViewColumn: forwardRef((props, ref) => <ViewColumn {...props} ref={ref} />)
-    };
+};
 
+
+//Used to render the clerks page
 function ClerkPage1(props){
     const [quotedata, setQuotedata] = useState([]);
     let history = useHistory();
     
-
+    //Structure of the quotes for MaterialTable
     const columns = [
         {title: 'Quote ID', field:'QuoteID'},
         {title: 'Customer ID', field:'CustomerID'},
@@ -58,12 +60,14 @@ function ClerkPage1(props){
 
 
     useEffect(() => {
+            //axios call to get all the unsanctioned quotes
             axios.get('http://localhost:3001/unsanctionedquotes').then((res) => {
                 setQuotedata(res.data);
                 console.log(res.data);
             });
     }, []);
 
+    //function to take you to a page where you can apply a discount, or sanction a quote.
     function handleRowClick(event, rowData){
         history.push({
             pathname: '/editquote',
@@ -73,6 +77,7 @@ function ClerkPage1(props){
 
     return(
         <div>
+            {/* Material table used to house all the unsanctioned quotes */}
             <MaterialTable title="Unsanctioned Quotes"
             data={quotedata}
             columns={columns}

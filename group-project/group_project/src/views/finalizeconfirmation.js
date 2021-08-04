@@ -2,6 +2,8 @@ import { Button, Typography } from '@material-ui/core';
 import React from 'react';
 import { useHistory } from 'react-router-dom';
 
+
+//Confirmation page for finalized quotes
 function FinalizeConfirmation(){
     let history = useHistory();
 
