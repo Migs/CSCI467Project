@@ -74,18 +74,23 @@ function AdminPage(props){
 		{title: 'Email', field:'Email'}
     ]
 
-	
+
+    //use Effect to run when the component is rendered, or the page is refreshed
     useEffect(() => {
+            //axios used to get associate information
             axios.get('http://localhost:3001/associates/').then((res) => {
                 setAssociatedata(res.data);
                 console.log(res.data);
             });
+            //axios used to get quotes information
             axios.get('http://localhost:3001/quotes/').then((res) => {
                 setQuotedata(res.data);
                 console.log(res.data);
             });
     }, []);
 
+    //Handles the row clicks,
+    //when clicked will redirect user to a page where they can edit associate information
     function handleRowClick(event, rowData){
         history.push({
             pathname: '/editassociate',
@@ -98,6 +103,7 @@ function AdminPage(props){
     return(
         <>
             <div>
+                {/* Used to render a dynamic table of associates */}
                 <MaterialTable title="Associates"
                 data={associatedata}
                 columns={associateColumns}
@@ -107,6 +113,7 @@ function AdminPage(props){
                 </MaterialTable>
             </ div>
             <div>
+                {/* Used to render a dynamic table of quotes */}
                 <MaterialTable title="Quotes"
                 data={quotedata}
                 columns={quoteColumns}
