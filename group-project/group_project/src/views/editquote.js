@@ -136,17 +136,57 @@ function EditQuote(props){
     const handleFinalize = () => {
         
         if(location.state.data.isPercentageDiscount){
-            finalPrice = location.state.data.Price - location.state.data.Price * location.state.data.Discount/100;
+            finalPrice = location.state.data.Price - location.state.data.Price * (location.state.data.Discount * .01);
         }
         else{
-            finalPrice = location.state.data.Price - location.state.data.Discount
+            finalPrice = location.state.data.Price - location.state.data.Discount;
         }
 
+    
         axios.put('http://localhost:3001/quotes/' + location.state.data.QuoteID + '/' + location.state.data.QuoteID + '/' +
         location.state.data.CustomerID + '/' + location.state.data.AssociateID + '/' + finalPrice + '/1/' + location.state.data.isPurchased + '/' + location.state.data.isPercentageDiscount + '/' +
         location.state.data.Discount + '/' + location.state.data.Email).then((res) => {
             console.log(res.data);
             history.push('/clerkpage2');
+            
+            if(res.data){
+                // console.log('attempting to email');
+
+                axios.get('http://localhost:3001/lineitems/' + location.state.data.QuoteID).then((res) => {
+                    let percentage = "Yes";
+                    if(location.state.data.isPercentageDiscount === 1) {percentage = "Yes";} else {percentage = "No";};
+
+                    let list = "<ul>";
+                    for (let i = 0; i < Object.keys(res.data).length; i++)
+                    {
+                        list += "<li>Item Description: ";
+                        list += res.data[i].ItemDescription;
+                        list += " | Price: ";
+                        list += res.data[i].Cost;
+                        list += "</li>";
+                    }
+                    list += "</ul>";
+                    let html = "<h1>Quote Order #" + location.state.data.QuoteID + " Details</h1>\
+                                <p>Quote ID: " + location.state.data.QuoteID +
+                                   "<br/>CustomerID: " + location.state.data.CustomerID +
+                                   "<br/>Percentage Based Discount? " + percentage +
+                                   "<br/>Discount: " + location.state.data.Discount +
+                                   list +
+                                   "<br/>Initial Price: $" + location.state.data.Price +
+                                   "<br/>Price after Discount: $" + finalPrice +
+                                   "<br/>Customer Email: " + location.state.data.Email +
+                                   "<br/>Original Quote Time: " + location.state.data.Time +
+                                   "<br/><br/>Please reply to confirm your purchase.</p>";
+                    // console.log("DEBUG: " + Object.keys(res.data).length);
+                    axios.post('http://localhost:3001/emailcustomer', {
+                        to: location.state.data.Email,
+                        subject: "Quote Order #" + location.state.data.QuoteID + " Details",
+                        html: html
+                    });
+                })
+
+            }
+
         })
     };
 	
