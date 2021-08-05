@@ -162,13 +162,12 @@ function EditQuote(props){
             
             //used to email after update
             if(res.data){
-                // console.log('attempting to email');
-
                 //get all the line items
                 axios.get('http://localhost:3001/lineitems/' + location.state.data.QuoteID).then((res) => {
                     let percentage = "Yes";
                     if(location.state.data.isPercentageDiscount === 1) {percentage = "Yes";} else {percentage = "No";};
 
+                    // list is HTML built to display line items
                     let list = "<ul>";
                     for (let i = 0; i < Object.keys(res.data).length; i++)
                     {
@@ -179,6 +178,8 @@ function EditQuote(props){
                         list += "</li>";
                     }
                     list += "</ul>";
+
+                    // html is HTML string to send in email
                     let html = "<h1>Quote Order #" + location.state.data.QuoteID + " Details</h1>\
                                 <p>Quote ID: " + location.state.data.QuoteID +
                                    "<br/>CustomerID: " + location.state.data.CustomerID +
@@ -190,7 +191,6 @@ function EditQuote(props){
                                    "<br/>Customer Email: " + location.state.data.Email +
                                    "<br/>Original Quote Time: " + location.state.data.Time +
                                    "<br/><br/>Please reply to confirm your purchase.</p>";
-                    // console.log("DEBUG: " + Object.keys(res.data).length);
                     //email the user
                     axios.post('http://localhost:3001/emailcustomer', {
                         to: location.state.data.Email,
@@ -204,8 +204,7 @@ function EditQuote(props){
         })
     };
 	
-	//Create the Line Items table
-	//Going to need an onRowUpdate/onRowDelete/onRowAdd so we can edit
+	//Create the Line Items and Notes tables
     return(
         <>
             <div>

@@ -20,7 +20,7 @@ import Search from '@material-ui/icons/Search';
 import ViewColumn from '@material-ui/icons/ViewColumn';
 import { useHistory } from 'react-router-dom';
 
-
+// UI elements
 const tableIcons = {
         Add: forwardRef((props, ref) => <AddBox {...props} ref={ref} />),
         Check: forwardRef((props, ref) => <Check {...props} ref={ref} />),
@@ -47,11 +47,8 @@ function AdminPage(props){
     const [quotedata, setQuotedata] = useState([]);
     let history = useHistory();
     const location = useLocation();
-    
-	//Something probably needs to go here to define the data that was sent from the previous page
 
-
-	//Line item column setup
+	//Associate column setup
     const associateColumns = [
         {title: 'Associate ID', field:'AssociateID'},
         {title: 'Username', field:'Username'},
@@ -61,7 +58,7 @@ function AdminPage(props){
         {title: 'Address', field:'Address'}
     ]
 	
-	//Note column setup
+	//Quote column setup
 	const quoteColumns = [
         {title: 'Quote ID', field:'QuoteID'},
         {title: 'Customer ID', field:'CustomerID'},
@@ -74,46 +71,56 @@ function AdminPage(props){
 		{title: 'Email', field:'Email'}
     ]
 
-
-    //use Effect to run when the component is rendered, or the page is refreshed
+	// this call grabs data to populate the tables
     useEffect(() => {
-            //axios used to get associate information
             axios.get('http://localhost:3001/associates/').then((res) => {
                 setAssociatedata(res.data);
                 console.log(res.data);
             });
-            //axios used to get quotes information
             axios.get('http://localhost:3001/quotes/').then((res) => {
                 setQuotedata(res.data);
                 console.log(res.data);
             });
     }, []);
 
-    //Handles the row clicks,
-    //when clicked will redirect user to a page where they can edit associate information
-    function handleRowClick(event, rowData){
-        history.push({
-            pathname: '/editassociate',
-            state: {data: rowData}
+    // used to update database when associate record is edited
+    const handleAssociateUpdate = (newData, oldData, resolve) => {
+
+        axios.put('http://localhost:3001/associates/' + oldData.AssociateID + '/ ' + newData.AssociateID + '/' + newData.Username
+         + '/' + newData.Pass + '/' + newData.Name + '/' + newData.Commission + '/' + newData.Address).then((res) => {
+            window.location.reload(false);
         })
-    };
+    }
+
+    // used to update database when associate record is deleted
+    const handleAssociateDelete = (oldData, resolve) => {
+        axios.delete('http://localhost:3001/associates/' + oldData.AssociateID).then((res) => {
+            window.location.reload(false);
+        })
+    }
 	
-	//Create the Line Items table
-	//Going to need an onRowUpdate/onRowDelete/onRowAdd so we can edit
+	//Create the Associates and Quotes table
     return(
         <>
             <div>
-                {/* Used to render a dynamic table of associates */}
                 <MaterialTable title="Associates"
                 data={associatedata}
                 columns={associateColumns}
                 icons={tableIcons}
                 options={{filtering:true}}
-                onRowClick={handleRowClick}>
+                editable={{         // allows editing and deleting of records
+                    onRowUpdate: (newData, oldData) =>
+                        new Promise((resolve) => {
+                        handleAssociateUpdate(newData, oldData, resolve);
+                    }),
+                    onRowDelete: (oldData) =>
+                     new Promise((resolve) => {
+                         handleAssociateDelete(oldData, resolve)
+                     })
+                }}>
                 </MaterialTable>
             </ div>
             <div>
-                {/* Used to render a dynamic table of quotes */}
                 <MaterialTable title="Quotes"
                 data={quotedata}
                 columns={quoteColumns}
