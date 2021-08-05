@@ -61,6 +61,45 @@ function FinalizeQuote(){
                         })
                 })
             })
+
+            if(res.data){
+                //get all the line items
+                axios.get('http://localhost:3001/lineitems/' + location.state.data.QuoteID).then((res) => {
+                    let percentage = "Yes";
+                    if(location.state.data.isPercentageDiscount === 1) {percentage = "Yes";} else {percentage = "No";};
+
+                    // list is HTML built to display line items
+                    let list = "<ul>";
+                    for (let i = 0; i < Object.keys(res.data).length; i++)
+                    {
+                        list += "<li>Item Description: ";
+                        list += res.data[i].ItemDescription;
+                        list += " | Price: ";
+                        list += res.data[i].Cost;
+                        list += "</li>";
+                    }
+                    list += "</ul>";
+
+                    // html is HTML string to send in email
+                    let html = "<h1>Thank you for your purchase!<br/>Quote Order #" + location.state.data.QuoteID + " Details</h1>\
+                                <p>Quote ID: " + location.state.data.QuoteID +
+                                   "<br/>CustomerID: " + location.state.data.CustomerID +
+                                   "<br/>Percentage Based Discount? " + percentage +
+                                   "<br/>Discount: " + location.state.data.Discount +
+                                   list +
+                                   "<br/>Initial Price: $" + location.state.data.Price +
+                                   "<br/>Price after Discount: $" + finalprice +
+                                   "<br/>Customer Email: " + location.state.data.Email +
+                                   "<br/>Original Quote Time: " + location.state.data.Time;
+                    //email the user
+                    axios.post('http://localhost:3001/emailcustomer', {
+                        to: location.state.data.Email,
+                        subject: "Quote Order #" + location.state.data.QuoteID + " Purchased",
+                        html: html
+                    });
+                })
+
+            }
         })
         history.push('/finalizeconfirmation');
     };
